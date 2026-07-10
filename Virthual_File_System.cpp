@@ -1,8 +1,13 @@
 #include<stdio.h>
 #include<stdlib.h>
 #include<string.h>
+#include<io.h>
+
+#ifdef _WIN32
+#include<windows.h>
+#else
 #include<unistd.h>
-#include<io.h>   // Uncommented to include standard I/O functions if supported
+#endif
 
 #define MAXINODE 50
 
@@ -604,7 +609,7 @@ int main()
     int ret = 0, fd = 0, count = 0;
     char command[4][80], str[80], arr[1024];
 
-    InitialiseSuperBlock();
+    InitializeSuperBlock();
     CreateDILB();
 
     while (1)
@@ -632,7 +637,11 @@ int main()
             }
             else if (strcmp(command[0], "clear") == 0)
             {
+#ifdef _WIN32
+                system("cls");
+#else
                 system("clear");
+#endif
                 continue;
             }
             else if (strcmp(command[0], "help") == 0)
@@ -783,7 +792,8 @@ int main()
                     printf("ERROR: File empty\n");
                 if (ret > 0)
                 {
-                    write(2, ptr, ret);
+                    ptr[ret] = '\0';
+                    printf("%s\n", ptr);
                 }
                 continue;
             }
